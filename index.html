@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chore Arcade</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #080b14;
+    --panel: #111625;
+    --panel2: #171d30;
+    --text: #f5f7ff;
+    --muted: #8f98b3;
+    --cyan: #4deaff;
+    --purple: #9b7cff;
+    --green: #54e39b;
+    --yellow: #ffd75a;
+    --red: #ff6577;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(77,234,255,.12), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(155,124,255,.12), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ---------- NAV ---------- */
+
+nav {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    border-bottom: 1px solid #20263a;
+    background: rgba(8,11,20,.8);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--cyan);
+}
+
+.nav-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.pill {
+    background: #151b2c;
+    border: 1px solid #28314a;
+    padding: 8px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.xp {
+    color: var(--yellow);
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+    text-align: center;
+    padding: 55px 20px 30px;
+}
+
+.badge {
+    display: inline-block;
+    border: 1px solid rgba(84,227,155,.35);
+    color: var(--green);
+    background: rgba(84,227,155,.07);
+    border-radius: 30px;
+    padding: 7px 13px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 7vw, 76px);
+    line-height: .95;
+    letter-spacing: -4px;
+}
+
+.hero h1 span {
+    color: var(--cyan);
+}
+
+.hero p {
+    color: var(--muted);
+    max-width: 620px;
+    margin: 20px auto 0;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* ---------- MAIN ---------- */
+
+.container {
+    width: min(1150px, 92%);
+    margin: auto;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 15px;
+}
+
+.section-title h2 {
+    font-size: 20px;
+}
+
+.section-title span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ---------- CHORE CARDS ---------- */
+
+.chores {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.chore-card {
+    background: linear-gradient(145deg, #141a2b, #0e1321);
+    border: 1px solid #242c43;
+    border-radius: 20px;
+    padding: 22px;
+    min-height: 220px;
+    cursor: pointer;
+    transition: .25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.chore-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--cyan);
+    box-shadow: 0 15px 45px rgba(0,0,0,.35);
+}
+
+.chore-icon {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.chore-card h3 {
+    margin-bottom: 7px;
+}
+
+.chore-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.chore-meta {
+    position: absolute;
+    bottom: 17px;
+    left: 22px;
+    right: 22px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.difficulty {
+    color: var(--yellow);
+}
+
+/* ---------- STATS ---------- */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    margin: 35px 0;
+}
+
+.stat {
+    background: var(--panel);
+    border: 1px solid #242c43;
+    padding: 18px;
+    border-radius: 16px;
+}
+
+.stat small {
+    color: var(--muted);
+}
+
+.stat strong {
+    display: block;
+    font-size: 28px;
+    margin-top: 7px;
+}
+
+/* ---------- REALITY LOG ---------- */
+
+.log {
+    background: var(--panel);
+    border: 1px solid #242c43;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    overflow: hidden;
+}
+
+.log-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #242c43;
+    display: flex;
+    justify-content: space-between;
+}
+
+.log-body {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.log-item {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1d2437;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.log-left {
+    display: flex;
+    gap: 10px;
+}
+
+.success {
+    color: var(--green);
+}
+
+.time {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* ---------- GAME MODAL ---------- */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,4,10,.82);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.game {
+    width: min(700px, 100%);
+    background: #0e1321;
+    border: 1px solid #2c3651;
+    border-radius: 25px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 30px 100px rgba(0,0,0,.6);
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 17px;
+    border: none;
+    background: #1b2235;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.game-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.game-top h2 {
+    font-size: 25px;
+}
+
+.game-top small {
+    color: var(--muted);
+}
+
+.progress {
+    height: 7px;
+    background: #20273b;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,var(--cyan),var(--purple));
+    transition: .3s;
+}
+
+.task {
+    background: #151b2d;
+    border: 1px solid #252f49;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 18px;
+}
+
+.task h3 {
+    margin-bottom: 10px;
+}
+
+.task p {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.options {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.option {
+    border: 1px solid #303951;
+    background: #111728;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.option:hover {
+    border-color: var(--cyan);
+    transform: translateX(4px);
+}
+
+.option.correct {
+    border-color: var(--green);
+    background: rgba(84,227,155,.1);
+}
+
+.option.wrong {
+    border-color: var(--red);
+    background: rgba(255,101,119,.1);
+}
+
+.action-button {
+    width: 100%;
+    border: none;
+    background: linear-gradient(90deg,var(--cyan),var(--purple));
+    color: #060812;
+    font-weight: 900;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.action-button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+/* ---------- SPECIAL GAME ---------- */
+
+.folder-zone {
+    min-height: 180px;
+    border: 2px dashed #303951;
+    border-radius: 15px;
+    padding: 20px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+.file-button {
+    padding: 12px 16px;
+    margin: 5px;
+    border: 1px solid #35405d;
+    border-radius: 10px;
+    background: #151c30;
+    color: white;
+    cursor: pointer;
+}
+
+.file-button:hover {
+    border-color: var(--cyan);
+}
+
+/* ---------- TOAST ---------- */
+
+.toast {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #171e30;
+    border: 1px solid #34415e;
+    padding: 13px 20px;
+    border-radius: 30px;
+    opacity: 0;
+    transition: .3s;
+    z-index: 200;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media(max-width:900px) {
+    .chores {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(max-width:550px) {
+    .chores {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .nav-right .pill:first-child {
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">CHORE<span>ARCADE</span> 🎮</div>
+
+    <div class="nav-right">
+        <div class="pill">🔥 <span id="streak">3</span> day streak</div>
+        <div class="pill xp">⚡ <span id="xp">420</span> XP</div>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="badge">● YOUR CHORES ARE NOW PLAYABLE</div>
+
+    <h1>Turn boring chores<br>into <span>games.</span></h1>
+
+    <p>
+        Every move you make in the arcade completes a real digital task.
+        Clear your backlog without feeling like you're doing admin work.
+    </p>
+</section>
+
+<main class="container">
+
+    <div class="section-title">
+        <h2>Choose your mission</h2>
+        <span id="remaining">27 tasks remaining</span>
+    </div>
+
+    <section class="chores">
+
+        <div class="chore-card" onclick="startGame('email')">
+            <div class="chore-icon">📨</div>
+            <h3>Inbox Invaders</h3>
+            <p>Destroy unnecessary emails and rescue the important ones.</p>
+
+            <div class="chore-meta">
+                <span>12 tasks</span>
+                <span class="difficulty">★★☆</span>
+            </div>
+        </div>
+
+        <div class="chore-card" onclick="startGame('files')">
+            <div class="chore-icon">📁</div>
+            <h3>Folder Frenzy</h3>
+            <p>Sort your messy files before the digital chaos takes over.</p>
+
+            <div class="chore-meta">
+                <span>8 tasks</span>
+                <span class="difficulty">★★☆</span>
+            </div>
+        </div>
+
+        <div class="chore-card" onclick="startGame('expense')">
+            <div class="chore-icon">💳</div>
+            <h3>Expense Dash</h3>
+            <p>Review transactions and catch suspicious spending.</p>
+
+            <div class="chore-meta">
+                <span>5 tasks</span>
+                <span class="difficulty">★★★</span>
+            </div>
+        </div>
+
+        <div class="chore-card" onclick="startGame('code')">
+            <div class="chore-icon">🐛</div>
+            <h3>Bug Blaster</h3>
+            <p>Fix tiny code mistakes before they become giant bugs.</p>
+
+            <div class="chore-meta">
+                <span>2 tasks</span>
+                <span class="difficulty">★★★</span>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="stats">
+
+        <div class="stat">
+            <small>CHORES COMPLETED</small>
+            <strong id="completed">14</strong>
+        </div>
+
+        <div class="stat">
+            <small>TIME SAVED</small>
+            <strong id="saved">42m</strong>
+        </div>
+
+        <div class="stat">
+            <small>BEST COMBO</small>
+            <strong id="combo">7×</strong>
+        </div>
+
+        <div class="stat">
+            <small>LEVEL</small>
+            <strong id="level">04</strong>
+        </div>
+
+    </section>
+
+    <section class="log">
+
+        <div class="log-header">
+            <strong>⚡ Reality Log</strong>
+            <span style="color:#54e39b;font-size:12px;">LIVE EXECUTION</span>
+        </div>
+
+        <div class="log-body" id="log">
+
+            <div class="log-item">
+                <div class="log-left">
+                    <span>📨</span>
+                    <div>
+                        <div>Archived 4 promotional emails</div>
+                        <div class="time">just now</div>
+                    </div>
+                </div>
+
+                <span class="success">+40 XP</span>
+            </div>
+
+            <div class="log-item">
+                <div class="log-left">
+                    <span>📁</span>
+                    <div>
+                        <div>Moved 3 screenshots → Media</div>
+                        <div class="time">2 min ago</div>
+                    </div>
+                </div>
+
+                <span class="success">+30 XP</span>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- GAME -->
+
+<div class="overlay" id="overlay">
+
+    <div class="game">
+
+        <button class="close" onclick="closeGame()">×</button>
+
+        <div class="game-top">
+
+            <div>
+                <small id="gameCategory">MISSION</small>
+                <h2 id="gameTitle">Inbox Invaders</h2>
+            </div>
+
+            <div style="text-align:right">
+                <small>COMBO</small>
+                <h2 id="gameCombo">1×</h2>
+            </div>
+
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <div id="gameArea"></div>
+
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+/* =========================================================
+   CHORE ARCADE ENGINE
+   ========================================================= */
+
+let state = {
+    xp: 420,
+    completed: 14,
+    saved: 42,
+    combo: 1,
+    bestCombo: 7,
+    level: 4,
+    remaining: 27
+};
+
+let currentGame = "";
+let currentTask = 0;
+let currentCombo = 1;
+
+
+/* ---------- GAME DATA ---------- */
+
+const games = {
+
+    email: {
+        title: "Inbox Invaders",
+        icon: "📨",
+
+        tasks: [
+            {
+                title: "⚠️ 2,431 unread promotional emails detected.",
+                description: "A message says: \"You won a FREE shopping voucher!\" What should happen?",
+                options: [
+                    ["Archive it", true],
+                    ["Mark as important", false],
+                    ["Reply immediately", false]
+                ],
+                action: "Archived promotional email"
+            },
+            {
+                title: "📨 Newsletter detected",
+                description: "You haven't opened this newsletter in 6 months.",
+                options: [
+                    ["Unsubscribe + archive", true],
+                    ["Mark as important", false],
+                    ["Forward to everyone", false]
+                ],
+                action: "Unsubscribed from newsletter"
+            },
+            {
+                title: "📩 Possible important email",
+                description: "Your college administration sent an announcement.",
+                options: [
+                    ["Keep in inbox", true],
+                    ["Delete", false],
+                    ["Mark as spam", false]
+                ],
+                action: "Kept important email"
+            }
+        ]
+    },
+
+    files: {
+        title: "Folder Frenzy",
+        icon: "📁",
+
+        tasks: [
+            {
+                title: "📸 File detected: IMG_20261031.png",
+                description: "Where should this screenshot go?",
+                options: [
+                    ["Pictures", true],
+                    ["Documents", false],
+                    ["Music", false]
+                ],
+                action: "Moved screenshot → Pictures"
+            },
+            {
+                title: "📄 File detected: Assignment.pdf",
+                description: "Identify the correct destination.",
+                options: [
+                    ["Documents", true],
+                    ["Downloads", false],
+                    ["Pictures", false]
+                ],
+                action: "Moved assignment → Documents"
+            },
+            {
+                title: "🎬 File detected: HackathonDemo.mp4",
+                description: "This is a video file.",
+                options: [
+                    ["Videos", true],
+                    ["Documents", false],
+                    ["Code", false]
+                ],
+                action: "Moved video → Videos"
+            }
+        ]
+    },
+
+    expense: {
+        title: "Expense Dash",
+        icon: "💳",
+
+        tasks: [
+            {
+                title: "₹899 — Food delivery",
+                description: "Does this transaction look normal?",
+                options: [
+                    ["Approve", true],
+                    ["Flag", false],
+                    ["Ignore forever", false]
+                ],
+                action: "Reviewed food transaction"
+            },
+            {
+                title: "₹14,999 — Unknown merchant",
+                description: "You don't recognize this transaction.",
+                options: [
+                    ["Flag for review", true],
+                    ["Approve", false],
+                    ["Delete transaction", false]
+                ],
+                action: "Flagged suspicious transaction"
+            },
+            {
+                title: "₹249 — Streaming subscription",
+                description: "Recurring monthly payment.",
+                options: [
+                    ["Approve", true],
+                    ["Flag as fraud", false],
+                    ["Delete bank record", false]
+                ],
+                action: "Reviewed subscription"
+            }
+        ]
+    },
+
+    code: {
+        title: "Bug Blaster",
+        icon: "🐛",
+
+        tasks: [
+            {
+                title: "🐛 BUG #104",
+                description: "if (age = 18) — what's wrong?",
+                options: [
+                    ["Use == instead of =", true],
+                    ["Remove the if", false],
+                    ["Change age to string", false]
+                ],
+                action: "Fixed equality bug"
+            },
+            {
+                title: "🐛 BUG #105",
+                description: "console.log(user.name) crashes when user is null.",
+                options: [
+                    ["Check user before accessing name", true],
+                    ["Delete console.log", false],
+                    ["Ignore the error", false]
+                ],
+                action: "Fixed null reference"
+            }
+        ]
+    }
+};
+
+
+/* ---------- START GAME ---------- */
+
+function startGame(type) {
+
+    currentGame = type;
+    currentTask = 0;
+    currentCombo = 1;
+
+    document.getElementById("overlay").classList.add("active");
+
+    renderTask();
+}
+
+
+/* ---------- RENDER TASK ---------- */
+
+function renderTask() {
+
+    const game = games[currentGame];
+    const task = game.tasks[currentTask];
+
+    document.getElementById("gameCategory").innerText =
+        game.icon + "  DIGITAL CHORE";
+
+    document.getElementById("gameTitle").innerText =
+        game.title;
+
+    document.getElementById("gameCombo").innerText =
+        currentCombo + "×";
+
+    const percentage =
+        (currentTask / game.tasks.length) * 100;
+
+    document.getElementById("progress").style.width =
+        percentage + "%";
+
+    let html = `
+        <div class="task">
+
+            <h3>${task.title}</h3>
+
+            <p>${task.description}</p>
+
+            <div class="options">
+    `;
+
+    task.options.forEach((option, index) => {
+
+        html += `
+            <button
+                class="option"
+                onclick="chooseOption(${index}, this)">
+                ${option[0]}
+            </button>
+        `;
+
+    });
+
+    html += `
+            </div>
+        </div>
+
+        <button
+            class="action-button"
+            id="nextButton"
+            disabled
+            onclick="nextTask()">
+            COMPLETE TASK →
+        </button>
+    `;
+
+    document.getElementById("gameArea").innerHTML = html;
+}
+
+
+/* ---------- ANSWER ---------- */
+
+function chooseOption(index, element) {
+
+    const task = games[currentGame].tasks[currentTask];
+
+    const buttons =
+        document.querySelectorAll(".option");
+
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
+
+    if (task.options[index][1]) {
+
+        element.classList.add("correct");
+
+        currentCombo++;
+
+        if (currentCombo > state.bestCombo) {
+            state.bestCombo = currentCombo;
+        }
+
+        addXP(25 + currentCombo * 5);
+
+        showToast(
+            "✓ Correct! Real chore action queued."
+        );
+
+    } else {
+
+        element.classList.add("wrong");
+
+        currentCombo = 1;
+
+        showToast(
+            "✕ Wrong move — try to protect the real world task."
+        );
+    }
+
+    document.getElementById("gameCombo").innerText =
+        currentCombo + "×";
+
+    document.getElementById("nextButton").disabled = false;
+}
+
+
+/* ---------- NEXT ---------- */
+
+function nextTask() {
+
+    const game = games[currentGame];
+
+    const task = game.tasks[currentTask];
+
+    executeRealAction(task.action);
+
+    state.completed++;
+    state.remaining--;
+
+    currentTask++;
+
+    updateStats();
+
+    if (currentTask >= game.tasks.length) {
+
+        finishGame();
+
+    } else {
+
+        renderTask();
+
+    }
+}
+
+
+/* ---------- SIMULATED REAL EXECUTION ---------- */
+
+function executeRealAction(action) {
+
+    /*
+        THIS IS THE CORE IDEA.
+
+        In production:
+        - Gmail API → archive/delete emails
+        - Google Drive API → move files
+        - Finance API → review transactions
+        - GitHub API → create commits/fix lint
+
+        The game is only the interface.
+        The action happens in the background.
+    */
+
+    const log = document.getElementById("log");
+
+    const item = document.createElement("div");
+
+    item.className = "log-item";
+
+    item.innerHTML = `
+        <div class="log-left">
+            <span>⚡</span>
+
+            <div>
+                <div>${action}</div>
+                <div class="time">just now • executed by Chore Arcade</div>
+            </div>
+        </div>
+
+        <span class="success">DONE</span>
+    `;
+
+    log.prepend(item);
+
+    state.saved += Math.floor(Math.random() * 3) + 2;
+
+    showToast("⚡ " + action);
+}
+
+
+/* ---------- FINISH ---------- */
+
+function finishGame() {
+
+    document.getElementById("progress").style.width = "100%";
+
+    document.getElementById("gameArea").innerHTML = `
+        <div class="task" style="text-align:center;padding:45px 20px">
+
+            <div style="font-size:60px">🏆</div>
+
+            <h2 style="margin:15px 0">
+                Mission Complete!
+            </h2>
+
+            <p>
+                You didn't just play a game.
+                You cleared real digital work.
+            </p>
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(3,1fr);
+                gap:10px;
+                margin-top:25px;
+            ">
+
+                <div class="stat">
+                    <small>XP</small>
+                    <strong>+${currentCombo * 50}</strong>
+                </div>
+
+                <div class="stat">
+                    <small>COMBO</small>
+                    <strong>${currentCombo}×</strong>
+                </div>
+
+                <div class="stat">
+                    <small>SAVED</small>
+                    <strong>${currentTask * 3}m</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="action-button" onclick="closeGame()">
+            RETURN TO ARCADE
+        </button>
+    `;
+
+    addXP(currentCombo * 50);
+}
+
+
+/* ---------- XP ---------- */
+
+function addXP(amount) {
+
+    state.xp += amount;
+
+    state.level =
+        Math.floor(state.xp / 100) + 1;
+
+    document.getElementById("xp").innerText =
+        state.xp;
+
+    document.getElementById("level").innerText =
+        String(state.level).padStart(2,"0");
+}
+
+
+/* ---------- STATS ---------- */
+
+function updateStats() {
+
+    document.getElementById("completed").innerText =
+        state.completed;
+
+    document.getElementById("saved").innerText =
+        state.saved + "m";
+
+    document.getElementById("combo").innerText =
+        state.bestCombo + "×";
+
+    document.getElementById("remaining").innerText =
+        state.remaining + " tasks remaining";
+}
+
+
+/* ---------- CLOSE ---------- */
+
+function closeGame() {
+
+    document.getElementById("overlay")
+        .classList.remove("active");
+
+    updateStats();
+}
+
+
+/* ---------- TOAST ---------- */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.innerText = message;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 1800);
+}
+
+
+/* ---------- KEYBOARD SUPPORT ---------- */
+
+document.addEventListener("keydown", e => {
+
+    if (e.key === "Escape") {
+        closeGame();
+    }
+
+});
+
+
+/* ---------- INITIALIZE ---------- */
+
+updateStats();
+
+</script>
+
+</body>
+</html>
